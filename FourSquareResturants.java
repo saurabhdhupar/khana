@@ -1,4 +1,5 @@
-import java.util.HashMap;
+package com.ebay.app.raptor.controller;
+
 import java.util.Map;
 
 import fi.foyt.foursquare.api.FoursquareApi;

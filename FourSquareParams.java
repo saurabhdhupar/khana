@@ -1,3 +1,5 @@
+package com.ebay.app.raptor.controller;
+
 
 public interface FourSquareParams {
 	

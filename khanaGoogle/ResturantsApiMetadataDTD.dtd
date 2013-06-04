@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    TODO define vocabulary identification
+    PUBLIC ID: -//vendor//vocabulary//EN
+    SYSTEM ID: http://server/path/ResturantsApiMetadataDTD.dtd
+
+-->
+
+<!--
+    An example how to use this DTD from your XML document:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE root SYSTEM "ResturantsApiMetadataDTD.dtd">
+
+    <root>
+    ...
+    </root>
+-->
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT root (api)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT api (apiKey|apiURL|apiName)*>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT apiName EMPTY>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT apiURL EMPTY>
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT apiKey EMPTY>

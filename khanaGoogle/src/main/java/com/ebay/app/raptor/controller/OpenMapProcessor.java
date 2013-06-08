@@ -14,7 +14,7 @@ import com.sun.jersey.api.client.WebResource;
 public class OpenMapProcessor {
 	
 	private String client_endpoint = "http://nominatim.openstreetmap.org/search";
-	private DecimalFormat df = new DecimalFormat("#.##");
+	private DecimalFormat df = new DecimalFormat("#.######");
 
 	public OpenMapResponse process(OpenMapRequest request) {
 		OpenMapResponse openMapresponse = new OpenMapResponse();

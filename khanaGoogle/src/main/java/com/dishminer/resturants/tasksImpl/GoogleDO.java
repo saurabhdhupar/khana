@@ -172,6 +172,7 @@ public class GoogleDO implements ITask{
                                +URLEncoder.encode(googleURL.get("GoogleType") ,"UTF-8")+
                                ResturantsApiUrls.GoogleSensor+"false"+ResturantsApiUrls.GoogleKey+
                                URLEncoder.encode(googleKey.get("key") ,"UTF-8");
+            System.out.println(GoogleDO.class.getName() + " googleTextSearchURL  :-  " +  googleTextSearchURL);
              return googleTextSearchURL;
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(GoogleDO.class.getName()).log(Level.SEVERE, null, ex);

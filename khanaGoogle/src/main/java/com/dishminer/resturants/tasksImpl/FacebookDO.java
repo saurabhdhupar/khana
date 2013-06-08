@@ -102,6 +102,8 @@ public class FacebookDO implements ITask{
                     Map<String,String> apiID= new HashMap<String, String>();
                 apiID.put(APIIDEnum.FACEBOOK.getName(), entity.getData().get(0).getId());
                 restDO.setApiID(apiID);
+                restDO.setLongitude(longitude);
+                restDO.setLattitude(lattitude);
                 return restDO;
           }
                

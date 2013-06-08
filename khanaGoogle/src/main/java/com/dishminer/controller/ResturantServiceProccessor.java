@@ -82,9 +82,6 @@ public class ResturantServiceProccessor {
            
             for(String zipcode : zipcodes){
                 System.out.println("Current ZipCode  :- " + zipcode);
-                if(processor.getNumberOfSameEntries() > 2) {
-                    break;
-                }
                 processor.setZipcode(zipcode);
                zipcode= zipcode.replaceAll("\"","");
                 if(zipcode.isEmpty()) break;
@@ -93,15 +90,39 @@ public class ResturantServiceProccessor {
               
                  Iterator<GeoCodeDO> itr_gecode = codes.iterator();
                  int i=0;
+                 int numberOfSameCalls=0;
+                 boolean skipRecords=false;
+                 int numberOfRecordsToSkip=0;
                  while(itr_gecode.hasNext() ) {
+                     if(skipRecords && numberOfRecordsToSkip < 20 ) {
+                         
+                         numberOfRecordsToSkip++;
+                         continue;
+                     }
+                     
                     //System.out.print( codes.size() );
-                    
+                    numberOfRecordsToSkip=0;
+                    skipRecords = false;
 	    	GeoCodeDO code = itr_gecode.next();
                  System.out.println("Current GeoCode  :- " + code.toString());
               
                  setDatainS3(apiNames, apiMetaDataMap, String.valueOf(code.getLongitude()), String.valueOf(code.getLatitude()));
                  i++;
                     try {
+                         if(processor.getNumberOfSameEntries() > 6) {
+                             System.out.println("processor.getNumberOfSameEntries()" + processor.getNumberOfSameEntries()  );
+              
+                               processor.setNumberOfSameEntries(0);
+                              skipRecords = true;
+                              numberOfSameCalls++;
+                              if(numberOfSameCalls > 10) {
+                                   System.out.println("Breaking Loop For ZipCode "  + zipcode);
+                                     System.out.println("Breaking Loop For GeoCode "  + code.toString());
+              
+                                 break;
+                             }
+                         }
+               
                          System.out.println("Sleeping main thread for 60000 " );
               
                         Thread.sleep(60000);

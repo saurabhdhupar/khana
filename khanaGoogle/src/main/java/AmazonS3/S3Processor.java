@@ -168,17 +168,22 @@ public class S3Processor {
              * You can optionally specify a location for your bucket if you want to
              * keep your data closer to your applications or users.
              */
-            System.out.println("Creating bucket " + bucketName + "\n");
-            s3.createBucket(bucketName);
-
+            
             /*
              * List the buckets in your account
              */
             System.out.println("Listing buckets");
+            boolean bucketExists=false;
             for (Bucket bucket : s3.listBuckets()) {
                 System.out.println(" - " + bucket.getName());
+                if(bucket.getName().equalsIgnoreCase(bucketName))
+                    bucketExists = true;
+                
             }
-            System.out.println();
+            if(!bucketExists){
+            System.out.println("Creating bucket " + bucketName + "\n");
+            s3.createBucket(bucketName);
+            }
 
             /*
              * Upload an object to your bucket - You can easily upload a file to
@@ -191,8 +196,9 @@ public class S3Processor {
             //System.out.println("Uploading a new object to S3 from a file\n");
            //  object.getObjectContent();
            int numberofObjPushedPerApi=0;
+             System.out.println("Zipcode to Write : " + zipcode );
+               
             for(IResturantDO rest : restList){
-                 System.out.println("Zipcode to Write : " + zipcode );
                  
                  boolean isZipSimilar = false;
                  double zipScore=0;
@@ -248,9 +254,13 @@ public class S3Processor {
            
             
             }
+            System.out.println(" numberofObjPushedPerApi :-  "+numberofObjPushedPerApi);
             
             if(numberofObjPushedPerApi == 0){
+                 
                 numberOfSameEntries++;
+                System.out.println(" numberOfSameEntries :-  "+numberOfSameEntries);
+           
                   int value =0;
                 if(numberofSameAPiCalls.get(apiname) != null) {
                     value  = numberofSameAPiCalls.get(apiname);

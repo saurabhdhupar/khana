@@ -69,6 +69,7 @@ public class FacebookDO implements ITask{
                     if (response.getClientResponseStatus().getFamily() == Response.Status.Family.SUCCESSFUL) {
                          entity = response.getEntity(Facebook.class);
                          RestaurantDO restDO = getResturantDO(entity);
+                        
                          resturantDOList.add(restDO);
                     } else {
                         System.out.println("ERROR! " + response.getStatus());    

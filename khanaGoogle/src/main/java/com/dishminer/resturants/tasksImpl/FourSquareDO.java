@@ -61,9 +61,12 @@ public class FourSquareDO implements ITask{
         try {
             Result<VenuesSearchResult> fourSquareResturants = fresturants.getFourSquareResturants(params);
             
+            if(fourSquareResturants.getResult() != null  && fourSquareResturants.getResult().getVenues() != null && fourSquareResturants.getResult().getVenues().length != 0)
             for (CompactVenue venue : fourSquareResturants.getResult().getVenues()) {
+                if(venue == null ) continue;
 	        // TODO: Do something we the data
                 RestaurantDO restDO = new RestaurantDO();
+                if( venue.getLocation() != null){
                 AddressDO add = new AddressDO();
                 add.setAddressLine(venue.getLocation().getAddress());
                 add.setCity(venue.getLocation().getCity());
@@ -75,13 +78,22 @@ public class FourSquareDO implements ITask{
                 restDO.setAddress(addressList);
                 restDO.setLongitude(String.valueOf(venue.getLocation().getLng()));
                 restDO.setLattitude(String.valueOf(venue.getLocation().getLat()));
+                }
                 restDO.setName(venue.getName());
+                 Map<String,String> apiID= new HashMap<String, String>();
+                if(venue.getContact() != null){
                 restDO.setPhoneNumber(venue.getContact().getPhone());
-                Map<String,String> apiID= new HashMap<String, String>();
-                apiID.put(APIIDEnum.FACEBOOK.getName(), venue.getContact().getFacebook());
+               apiID.put(APIIDEnum.FACEBOOK.getName(), venue.getContact().getFacebook());
                 apiID.put(APIIDEnum.TWITTER.getName(), venue.getContact().getTwitter());
+                }
                 apiID.put(APIIDEnum.FOURSQUARE.getName(), venue.getId());
                 restDO.setApiID(apiID);
+                if(venue.getStats() != null){
+                restDO.setFourSquareCheckins(String.valueOf(venue.getStats().getCheckinsCount()));
+                
+                restDO.setFourSquareUserCount(String.valueOf(venue.getStats().getUsersCount()));
+                }
+                
                resturantslists.add(restDO);
                 
                 System.out.println(venue.getName());

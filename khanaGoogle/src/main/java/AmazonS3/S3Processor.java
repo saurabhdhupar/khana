@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -38,6 +39,7 @@ import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.dishminer.placesmatching.algorithm.MatchStringUtils;
 import com.dishminer.resturants.tasks.IResturantDO;
 import com.dishminer.resturantsservice.AddressDO;
 import com.dishminer.resturantsservice.RestaurantDO;
@@ -79,7 +81,62 @@ public class S3Processor {
     
      private List<IResturantDO> restList = new ArrayList<IResturantDO>();
      private static String OBJECT_MAPPER= "object_mapper";
+     private  AmazonS3 s3 ; 
+     private String apiname;
+     private static int numberOfObjectPushed = 0;
+     private String zipcode;
+     ClientConfiguration config = new ClientConfiguration();
+     private int numberOfSameEntries;
+     private HashMap<String,Integer> numberofSameAPiCalls;
+
+    public HashMap<String, Integer> getNumberofSameAPiCalls() {
+        return numberofSameAPiCalls;
+    }
+
+    public void setNumberofSameAPiCalls(HashMap<String, Integer> numberofSameAPiCalls) {
+        this.numberofSameAPiCalls = numberofSameAPiCalls;
+    }
      
+     
+
+    public int getNumberOfSameEntries() {
+        return numberOfSameEntries;
+    }
+
+    public void setNumberOfSameEntries(int numberOfSameEntries) {
+        this.numberOfSameEntries = numberOfSameEntries;
+    }
+     
+     
+     
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
+    }
+     
+     
+
+    public String getApiname() {
+        return apiname;
+    }
+
+    public void setApiname(String apiname) {
+        this.apiname = apiname;
+    }
+
+     
+     
+     public  AmazonS3 getinstance(){
+     if(s3 == null){
+         config.setSocketTimeout(2000);
+         s3= new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
+     }
+     return  s3;
+     }
      
     
     public void s3Writer() throws IOException {
@@ -91,12 +148,11 @@ public class S3Processor {
          *            AwsCredentials.properties file before you try to run this
          *            sample.
          * http://aws.amazon.com/security-credentials
-         */
-        AmazonS3 s3 = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
-		Region usWest2 = Region.getRegion(Regions.US_WEST_2);
+         */s3 = getinstance();
+        	Region usWest2 = Region.getRegion(Regions.US_WEST_2);
 		s3.setRegion(usWest2);
 
-        String bucketName = "resturant.dishminer";
+        String bucketName = "resturant.dishminer.temp";
        // String key = "MyObjectKey";
 
         System.out.println("===========================================");
@@ -112,8 +168,8 @@ public class S3Processor {
              * You can optionally specify a location for your bucket if you want to
              * keep your data closer to your applications or users.
              */
-            //System.out.println("Creating bucket " + bucketName + "\n");
-            //s3.createBucket(bucketName);
+            System.out.println("Creating bucket " + bucketName + "\n");
+            s3.createBucket(bucketName);
 
             /*
              * List the buckets in your account
@@ -132,27 +188,78 @@ public class S3Processor {
              * like content-type and content-encoding, plus additional metadata
              * specific to your applications.
              */
-            System.out.println("Uploading a new object to S3 from a file\n");
+            //System.out.println("Uploading a new object to S3 from a file\n");
            //  object.getObjectContent();
+           int numberofObjPushedPerApi=0;
             for(IResturantDO rest : restList){
-                String  key ="";
-                if(rest != null)
-              key = rest.getName() +"_"+ rest.getAddress().get(0).getZipCode() +"_"+rest.getAddress().get(0).getAddressLine();
-               RestaurantDO storedrest = S3Processor.readJSon(bucketName , key);
-               if(storedrest != null ){
-                  RestaurantDO newRest= createRestOBJ(storedrest , rest);
+                 System.out.println("Zipcode to Write : " + zipcode );
+                 
+                 boolean isZipSimilar = false;
+                 double zipScore=0;
+                String  key =null;
+                if(rest != null
+                        && rest.getName() != null && rest.getAddress() != null && !rest.getAddress().isEmpty()) {
+                    key = rest.getName() +"_"+ rest.getAddress().get(0).getZipCode() +"_"+rest.getAddress().get(0).getAddressLine()+"#_#"+getApiname();
+                }
+                
+               RestaurantDO storedrest= null;
+               if(key != null) {
+                    storedrest = readJSon(bucketName , key);
+                }
+                
+               if(storedrest != null || key == null ){
+                    System.out.println(key +" Object Already Stored. Skipping..");
                     
-               s3.putObject(new PutObjectRequest(bucketName, key, createSampleFile(newRest)));
+                    
                continue;
                }
+               if(rest.getAddress().get(0).getZipCode() != null) {
+                    zipScore=  MatchStringUtils.zipcodeSimilar(zipcode,rest.getAddress().get(0).getZipCode() );
+                }
+               
+               if(zipScore > 50) {
+                    System.out.println("ZipCode Matched.. Wrtie object to s3" );
+          
+                    isZipSimilar = true;
+                }
              //   UUID randomUUID= UUID.randomUUID();
                 
             //    createSampleFile(key ,randomUUID );
                 // s3.putObject(new PutObjectRequest(bucketName, OBJECT_MAPPER,  createSampleFile(key )));
-           
+            System.out.println("Trying to upload a " + key+"  object to S3 from a file\n");
+           if(isZipSimilar){
             s3.putObject(new PutObjectRequest(bucketName, key, createSampleFile(rest)));
+           
+            System.out.println("Uploading a " + key+"  object to S3 from a file\n");
+                        System.out.println("Number of objects pushed in S3 " + numberOfObjectPushed);
+                        numberOfObjectPushed++;
+                        numberofObjPushedPerApi++;
+           
+
+           }
+           else
+           {
+               System.out.println(" Zip "+zipcode+" is not same for " + key+"\n");
+            
+               
+           }
+           
+            
+           
             
             }
+            
+            if(numberofObjPushedPerApi == 0){
+                numberOfSameEntries++;
+                  int value =0;
+                if(numberofSameAPiCalls.get(apiname) != null) {
+                    value  = numberofSameAPiCalls.get(apiname);
+                }
+                
+                numberofSameAPiCalls.put(apiname, ++value);
+            }
+            
+            
             
               /*System.out.println("Downloading an object");
                S3Object object = s3.getObject(new GetObjectRequest(bucketName, OBJECT_MAPPER));
@@ -295,11 +402,9 @@ public class S3Processor {
     
     
     
-    public static String[] getZipcode(String bucketName , String key){
+    public  String[] getZipcodes(String bucketName , String key){
     
-     AmazonS3 s3 = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
-		Region usWest2 = Region.getRegion(Regions.US_WEST_2);
-		s3.setRegion(usWest2);
+     AmazonS3 s3 = getinstance();
                 String [] zipcodes=null;
         S3Object object = s3.getObject(new GetObjectRequest(bucketName, key));
            // System.out.println("Content-Type: "  + object.getObjectMetadata().getContentType());
@@ -314,21 +419,20 @@ public class S3Processor {
             }
             if (line == null) break;
             line=line.replaceAll("\"", "");
+            System.out.println("Zipcodes :- " + line);
             zipcodes = line.split(",");
         }
-        System.out.println();
+        
         return zipcodes;
   
     }
     
     
     
-    public static RestaurantDO readJSon(String bucketName , String key){
+    public  RestaurantDO readJSon(String bucketName , String key){
          
     boolean check = false;
-     AmazonS3 s3 = new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
-		Region usWest2 = Region.getRegion(Regions.US_WEST_2);
-		s3.setRegion(usWest2);
+     AmazonS3 s3 = getinstance();
                 ListObjectsRequest request = new ListObjectsRequest();
             request.setBucketName(bucketName);
             

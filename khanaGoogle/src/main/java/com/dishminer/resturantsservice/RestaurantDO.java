@@ -2,6 +2,7 @@ package com.dishminer.resturantsservice;
 
 import com.dishminer.resturants.tasks.IAddress;
 import com.dishminer.resturants.tasks.IResturantDO;
+import fi.foyt.foursquare.api.entities.CompleteSpecial;
 import java.util.List;
 import java.util.Map;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -19,7 +20,25 @@ public class RestaurantDO implements IResturantDO{
         private String pricing;
         private String restRating;
         private Map<String,String> apiID;
+        private String FourSquareCheckins;
+        private String FourSquareUserCount;
 
+    public String getFourSquareCheckins() {
+        return FourSquareCheckins;
+    }
+
+    public void setFourSquareCheckins(String FourSquareCheckins) {
+        this.FourSquareCheckins = FourSquareCheckins;
+    }
+
+    public String getFourSquareUserCount() {
+        return FourSquareUserCount;
+    }
+
+    public void setFourSquareUserCount(String FourSquareUserCount) {
+        this.FourSquareUserCount = FourSquareUserCount;
+    }
+       
     
         
         
@@ -179,10 +198,8 @@ public class RestaurantDO implements IResturantDO{
     public void setApiID(Map<String,String> apiID) {
         this.apiID = apiID;
     }
-        
-        
-        
 
+  
 	
 	
 	

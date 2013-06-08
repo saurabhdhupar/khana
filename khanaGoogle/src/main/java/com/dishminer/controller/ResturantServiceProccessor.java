@@ -55,36 +55,67 @@ public class ResturantServiceProccessor {
     private static final String packageName = "com.dishminer.resturants.tasksImpl.";
     private static final String classSuffix ="DO";
     private static List<IResturantDO> resturantList = new ArrayList<IResturantDO>();
+    private static S3Processor processor = new S3Processor();
+    private static int numberofCalls=0;
         // Three contexts following different strategies
     
     public static void main(String args[]){
             ArrayList<APIMetadataBO> apiMetaDataBOList = resturantsUtils.getApis();
             ArrayList<String> apiNames = new ArrayList<String>();
             HashMap<String,APIMetadataBO> apiMetaDataMap = new HashMap<String , APIMetadataBO>();
+             HashMap<String,Integer> numberofSameAPiCalls = new HashMap<String, Integer>();
+               
             for(APIMetadataBO api : apiMetaDataBOList){
             
                 String apiname = api.getApiName();
                 apiMetaDataMap.put(apiname, api);
                 apiNames.add(apiname);
+                numberofSameAPiCalls.put(apiname, 0);
+                processor.setNumberofSameAPiCalls(numberofSameAPiCalls);
             
             }
             //S3Processor.readJSon();
-                
-            String [] zipcodes = S3Processor.getZipcode("zipcodesvc.dishminer.us", "sunnyvale,ca");
+             System.out.println("Current City :- " + "sunnyvale,ca");
+               
+            String [] zipcodes = processor.getZipcodes("zipcodesvc.dishminer.us", "sunnyvale,ca");
+             System.out.println("Number of Zipcodes :- " + zipcodes.length);
+           
             for(String zipcode : zipcodes){
-                
+                System.out.println("Current ZipCode  :- " + zipcode);
+                if(processor.getNumberOfSameEntries() > 2) {
+                    break;
+                }
+                processor.setZipcode(zipcode);
                zipcode= zipcode.replaceAll("\"","");
                 if(zipcode.isEmpty()) break;
                 Set<GeoCodeDO> codes = getCodes(zipcode,"Sunnyvale", "CA", "us");
+                 System.out.println("Number of GeoCodes for ZipCode:- "+zipcode+" are  :- " + codes.size());
+              
                  Iterator<GeoCodeDO> itr_gecode = codes.iterator();
                  int i=0;
-                 while(itr_gecode.hasNext() && i <= 3) {
+                 while(itr_gecode.hasNext() ) {
+                    //System.out.print( codes.size() );
+                    
 	    	GeoCodeDO code = itr_gecode.next();
+                 System.out.println("Current GeoCode  :- " + code.toString());
+              
                  setDatainS3(apiNames, apiMetaDataMap, String.valueOf(code.getLongitude()), String.valueOf(code.getLatitude()));
                  i++;
+                    try {
+                         System.out.println("Sleeping main thread for 60000 " );
+              
+                        Thread.sleep(60000);
+                        if(numberofCalls > 5000) {
+                              System.out.println("Number of FourSquare calls greater than 5000/hr " );
+              
+                            Thread.sleep(600000);
+                        }
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(ResturantServiceProccessor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                  }
              
-                 break;
+                 //break;
   
             
             }
@@ -189,9 +220,18 @@ public class ResturantServiceProccessor {
                 if(apiname.equalsIgnoreCase("Facebook")) {
                     continue;
                 }
+            System.out.println("Calling Api : " + apiname );
+              
+            if(processor.getNumberofSameAPiCalls() != null && processor.getNumberofSameAPiCalls().get(apiname) > 3) continue;
             controler = new ResturantController((ITask)Class.forName(packageName+apiname+classSuffix).newInstance(),apiMetaDataMap.get(apiname) , request);
            List<IResturantDO> restList =  controler.executeStrategy();
-            Set<IResturantDO> templist= new HashSet<IResturantDO>();
+           processor.setApiname(apiname);
+            processor.setGoogleRestList(restList);
+            if(apiname.equalsIgnoreCase("FourSquare")) {
+                    numberofCalls = restList.size();
+                }
+            writeInS3();
+           Set<IResturantDO> templist= new HashSet<IResturantDO>();
                Set<IResturantDO> tempSet= new HashSet<IResturantDO>();
                     Set<IResturantDO> templist1= new HashSet<IResturantDO>();
                     List<IResturantDO> templist2= new ArrayList<IResturantDO>();
@@ -249,14 +289,16 @@ public class ResturantServiceProccessor {
             
            request.setResturantList(getResturantList(resturantList));
                   
-            
+             
            controler = new ResturantController((ITask)Class.forName(packageName+"Facebook"+classSuffix).newInstance(),apiMetaDataMap.get("Facebook") , request);
+           System.out.println("Calling Api : " + "Facebook" );
+          
            List<IResturantDO> restList =  controler.executeStrategy();
-           mergeFaceBookListToOrigList(restList);
+          // mergeFaceBookListToOrigList(restList);
             
-            if(resturantList !=null && !resturantList.isEmpty()){
-           S3Processor processor = new S3Processor();
-           processor.setGoogleRestList(resturantList);
+            if(restList !=null && !restList.isEmpty()){
+           processor.setApiname("Facebook");
+           processor.setGoogleRestList(restList);
                 try {
                     processor.s3Writer();
                     
@@ -288,14 +330,26 @@ public class ResturantServiceProccessor {
 		OpenMapProcessor openStreetMapProcessor = new OpenMapProcessor();
 		OpenMapRequest request = requestHelper.createRequest(zipCode, location, state, country);
 		OpenMapResponse response = openStreetMapProcessor.process(request);
-		FourSquareCredentials credentials = FourSquareUtils.createFourSquareCredentials();
-	  Iterator<GeoCodeDO> itr_gecode = response.getGeoCode().iterator();
+                Iterator<GeoCodeDO> itr_gecode = response.getGeoCode().iterator();
 	    return response.getGeoCode(); 
 	}
     
     
     
     
+    private static void writeInS3(){
+    
+    
+       try {
+                    processor.s3Writer();
+                    
+                    
+                } catch (IOException ex) {
+                    Logger.getLogger(ResturantServiceProccessor.class.getName()).log(Level.SEVERE, null, ex);
+                }
+           
+      }
+            
     
     
     

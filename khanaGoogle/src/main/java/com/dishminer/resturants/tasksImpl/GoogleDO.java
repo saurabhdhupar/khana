@@ -69,6 +69,7 @@ public class GoogleDO implements ITask{
                     if (response.getClientResponseStatus().getFamily() == Response.Status.Family.SUCCESSFUL) {
                         //Response.status (Status.OK).entity (user).build ();
                         GoogleResponseDO entity = response.getEntity(GoogleResponseDO.class);
+                       // entity.getResults().get(0).
                         if(entity != null && entity.getResults() != null)
                         for(Results result : entity.getResults()) {
                             placesIds.add(result.getReference());
@@ -231,14 +232,16 @@ public class GoogleDO implements ITask{
         apiURL.put(APIIDEnum.GOOGLE.getName(), entity.getResult().getUrl());
         apiURL.put(APIIDEnum.WEBSITE.getName(), entity.getResult().getWebsite());
         rest.setAPIURL(apiURL);
+        if(entity.getResult().getGeometry() != null && entity.getResult().getGeometry().getLocation() != null ){
         rest.setLattitude(entity.getResult().getGeometry().getLocation().getLat());
         
         rest.setLongitude(entity.getResult().getGeometry().getLocation().getLng());
+        }
         rest.setName(entity.getResult().getName());
         rest.setPhoneNumber(entity.getResult().getInternational_phone_number());
         rest.setResturantRating(entity.getResult().getRating());
         HashMap<String,String> apiId = new HashMap<String, String>();
-        apiId.put(APIIDEnum.GOOGLE.getName(), entity.getResult().getReference());
+        apiId.put(APIIDEnum.GOOGLE.getName(), entity.getResult().getId());
         rest.setApiID(apiId);
         
         rest.setPricing(entity.getResult().getPrice_level());

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/RestaurantData"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/scribe-1.1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/gson-2.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/apache-mime4j-0.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/httpclient-4.0.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/httpcore-4.0.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

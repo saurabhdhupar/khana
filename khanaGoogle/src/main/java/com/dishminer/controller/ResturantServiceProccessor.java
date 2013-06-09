@@ -93,13 +93,19 @@ public class ResturantServiceProccessor {
                  int numberOfSameCalls=0;
                  boolean skipRecords=false;
                  int numberOfRecordsToSkip=0;
+                 int codesSize=0;
                  while(itr_gecode.hasNext() ) {
-                     if(skipRecords && numberOfRecordsToSkip < 20 ) {
-                         
+                      if(skipRecords && numberOfRecordsToSkip < 30 ) {
+                         codesSize++;
                          numberOfRecordsToSkip++;
+                        
+                         GeoCodeDO code = itr_gecode.next();
+                         
                          continue;
                      }
-                     
+                     System.out.println("Remaining Codes for ZipCode :- "+ zipcode +"  :- "+ (codes.size() - codesSize ) );
+              codesSize++;
+                    
                     //System.out.print( codes.size() );
                     numberOfRecordsToSkip=0;
                     skipRecords = false;
@@ -115,7 +121,9 @@ public class ResturantServiceProccessor {
                                processor.setNumberOfSameEntries(0);
                               skipRecords = true;
                               numberOfSameCalls++;
-                              if(numberOfSameCalls > 10) {
+                               System.out.println("Number of same calls "  + numberOfSameCalls);
+                                  
+                              if(numberOfSameCalls > 6) {
                                    System.out.println("Breaking Loop For ZipCode "  + zipcode);
                                      System.out.println("Breaking Loop For GeoCode "  + code.toString());
               
@@ -243,7 +251,7 @@ public class ResturantServiceProccessor {
                 }
             System.out.println("Calling Api : " + apiname );
               
-            if(processor.getNumberofSameAPiCalls() != null && processor.getNumberofSameAPiCalls().get(apiname) > 3) continue;
+           
             controler = new ResturantController((ITask)Class.forName(packageName+apiname+classSuffix).newInstance(),apiMetaDataMap.get(apiname) , request);
            List<IResturantDO> restList =  controler.executeStrategy();
            processor.setApiname(apiname);
@@ -311,8 +319,8 @@ public class ResturantServiceProccessor {
            request.setResturantList(getResturantList(resturantList));
                   
              
-           controler = new ResturantController((ITask)Class.forName(packageName+"Facebook"+classSuffix).newInstance(),apiMetaDataMap.get("Facebook") , request);
-           System.out.println("Calling Api : " + "Facebook" );
+           /*controler = new ResturantController((ITask)Class.forName(packageName+"Facebook"+classSuffix).newInstance(),apiMetaDataMap.get("Facebook") , request);
+           System.out.println("Calling Api : " + "Facebook" );*/
           
            List<IResturantDO> restList =  controler.executeStrategy();
           // mergeFaceBookListToOrigList(restList);
@@ -320,13 +328,13 @@ public class ResturantServiceProccessor {
             if(restList !=null && !restList.isEmpty()){
            processor.setApiname("Facebook");
            processor.setGoogleRestList(restList);
-                try {
+                /*try {
                     processor.s3Writer();
                     
                     
                 } catch (IOException ex) {
                     Logger.getLogger(ResturantServiceProccessor.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                }*/
            
             }
             

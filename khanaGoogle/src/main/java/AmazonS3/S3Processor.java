@@ -205,7 +205,7 @@ public class S3Processor {
                 String  key =null;
                 if(rest != null
                         && rest.getName() != null && rest.getAddress() != null && !rest.getAddress().isEmpty()) {
-                    key = rest.getName() +"_"+ rest.getAddress().get(0).getZipCode() +"_"+rest.getAddress().get(0).getAddressLine()+"#_#"+getApiname();
+                    key = rest.getName() +"_"+rest.getLattitude()+ "_"+rest.getLongitude()+"_"+rest.getAddress().get(0).getZipCode() +"_"+rest.getAddress().get(0).getAddressLine()+"#_#"+getApiname();
                 }
                 
                RestaurantDO storedrest= null;

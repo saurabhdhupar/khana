@@ -43,6 +43,7 @@ import com.dishminer.placesmatching.algorithm.MatchStringUtils;
 import com.dishminer.resturants.tasks.IResturantDO;
 import com.dishminer.resturantsservice.AddressDO;
 import com.dishminer.resturantsservice.RestaurantDO;
+import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +54,12 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.JsonParser;
@@ -413,10 +420,19 @@ public class S3Processor {
     
     
     public  String[] getZipcodes(String bucketName , String key){
-    
-     AmazonS3 s3 = getinstance();
+        
+        
+         AmazonS3 s3 = getinstance();
+         
+            S3Object object = null;
+              object = s3.getObject(new GetObjectRequest(bucketName, key));
+              
+            if(object == null ) {
+            return null;
+        }
+      
+   
                 String [] zipcodes=null;
-        S3Object object = s3.getObject(new GetObjectRequest(bucketName, key));
            // System.out.println("Content-Type: "  + object.getObjectMetadata().getContentType());
            BufferedReader reader = new BufferedReader(new InputStreamReader(object.getObjectContent()));
         while (true) {
@@ -595,5 +611,13 @@ public class S3Processor {
     
     }
     
+    
+    
+    
+    
+    
+   
 
 }
+
+

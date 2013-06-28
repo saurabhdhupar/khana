@@ -1,5 +1,10 @@
 package com.ebay.app.raptor.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class OpenMapRequest {
 	
 	private String location;
@@ -54,9 +59,14 @@ public class OpenMapRequest {
 	}
 	@Override
 	public String toString() {
-		return "?q=" + location + "," + state
-				+ "," + zipCode + "&format=" + format + "&polygon="
-				+ (polygon?"1":"0") + "&addressdetails=" + (addressdetails?"1":"0");
+        try {
+            return "?q=" + URLEncoder.encode(location,"UTF-8") + "," + state
+                            + "," + zipCode + "&format=" + format + "&polygon="
+                            + (polygon?"1":"0") + "&addressdetails=" + (addressdetails?"1":"0");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(OpenMapRequest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
 	}
 	
 	

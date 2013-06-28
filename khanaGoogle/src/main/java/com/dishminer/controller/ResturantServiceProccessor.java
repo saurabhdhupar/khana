@@ -61,10 +61,10 @@ public class ResturantServiceProccessor {
     
     public static void main(String args[]){
             ArrayList<APIMetadataBO> apiMetaDataBOList = resturantsUtils.getApis();
+            ArrayList<String> cities = resturantsUtils.getCities();
             ArrayList<String> apiNames = new ArrayList<String>();
             HashMap<String,APIMetadataBO> apiMetaDataMap = new HashMap<String , APIMetadataBO>();
              HashMap<String,Integer> numberofSameAPiCalls = new HashMap<String, Integer>();
-               
             for(APIMetadataBO api : apiMetaDataBOList){
             
                 String apiname = api.getApiName();
@@ -74,18 +74,29 @@ public class ResturantServiceProccessor {
                 processor.setNumberofSameAPiCalls(numberofSameAPiCalls);
             
             }
+            
+            
+            
+
             //S3Processor.readJSon();
-             System.out.println("Current City :- " + "sunnyvale,ca");
+            for(String city : cities){
+            String currentcity=city.toLowerCase()+","+"ca";
+              System.out.println("Current City :- " + currentcity);
+           
+           
                
-            String [] zipcodes = processor.getZipcodes("zipcodesvc.dishminer.us", "sunnyvale,ca");
+            String [] zipcodes = processor.getZipcodes("zipcodesvc.dishminer.us", currentcity);
              System.out.println("Number of Zipcodes :- " + zipcodes.length);
            
             for(String zipcode : zipcodes){
+                //TODO: remove this line
                 System.out.println("Current ZipCode  :- " + zipcode);
+                
                 processor.setZipcode(zipcode);
                zipcode= zipcode.replaceAll("\"","");
                 if(zipcode.isEmpty()) break;
-                Set<GeoCodeDO> codes = getCodes(zipcode,"Sunnyvale", "CA", "us");
+                Set<GeoCodeDO> codes = getCodes(zipcode,currentcity, "CA", "us");
+                if(codes == null || codes.isEmpty()) continue;
                  System.out.println("Number of GeoCodes for ZipCode:- "+zipcode+" are  :- " + codes.size());
               
                  Iterator<GeoCodeDO> itr_gecode = codes.iterator();
@@ -131,8 +142,7 @@ public class ResturantServiceProccessor {
                              }
                          }
                
-                         System.out.println("Sleeping main thread for 60000 " );
-              
+                        System.out.println("Sleeping main thread for 60000 ..." );
                         Thread.sleep(60000);
                         if(numberofCalls > 5000) {
                               System.out.println("Number of FourSquare calls greater than 5000/hr " );
@@ -148,6 +158,8 @@ public class ResturantServiceProccessor {
   
             
             }
+           }
+            
         
   
       

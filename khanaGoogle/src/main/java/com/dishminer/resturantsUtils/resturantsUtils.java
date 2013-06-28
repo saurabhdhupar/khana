@@ -78,6 +78,54 @@ public class resturantsUtils {
         return apiMetaDataBOList;
   }
  
+ 
+ 
+ 
+ 
+ public static ArrayList<String> getCities(){
+     
+     
+     ArrayList<String> cityList = new ArrayList<String>();
+ 
+    try {
+ 
+	File fXmlFile = new File("BayAreaCities.xml");
+	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+	Document doc = dBuilder.parse(fXmlFile);
+        doc.getDocumentElement().normalize();
+        NodeList nList = doc.getElementsByTagName("city");
+ 	for (int temp = 0; temp < nList.getLength(); temp++) {
+                String city = new String();
+		Node nNode = nList.item(temp);
+ 
+		if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+ 
+			Element eElement = (Element) nNode;
+                          NodeList urlNodeList = eElement.getElementsByTagName("cityName");
+                      int iloop=0;
+                        while( urlNodeList.getLength() >iloop ){
+                            Node urlNode = urlNodeList.item(iloop);
+                            city= urlNode.getFirstChild().getNodeValue();
+                           
+                              
+                        cityList.add(city);
+                      
+                                iloop++;
+                        }
+                       
+			
+		}
+	}
+    } catch (Exception e) {
+	e.printStackTrace();
+    }
+        return cityList;
+  }
+ 
+ 
+ 
+ 
 }
     
     

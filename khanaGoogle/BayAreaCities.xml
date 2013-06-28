@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+  
+
+<root>
+    
+    
+    <city>
+        <cityName>Alameda</cityName>
+        <cityName>Albany</cityName>
+         <cityName>American Canyon</cityName>
+        <cityName>Antioch</cityName>
+        <cityName>Atherton</cityName>
+        <cityName>Belmont</cityName>
+        <cityName>Belvedere Tiburon</cityName>
+        <cityName>Benicia</cityName>
+        <cityName>Berkeley</cityName>
+        <cityName>Brentwood</cityName>
+        <cityName>Brisbane</cityName>
+        <cityName>Burlingame</cityName>
+        <cityName>Calistoga</cityName>
+        <cityName>Campbell</cityName>
+        <cityName>Clayton</cityName>
+        <cityName>Cloverdale</cityName>
+        <cityName>Colma</cityName>
+        <cityName>Concord</cityName>
+        <cityName>Corte Madera</cityName>
+        <cityName>Cotati</cityName>
+        <cityName>Cupertino</cityName>
+        <cityName>Daly City</cityName>
+        <cityName>Danville</cityName>
+        <cityName>Dixon</cityName>
+        <cityName>Dublin</cityName>
+        <cityName>Palo Alto</cityName>
+        <cityName>El Cerrito</cityName>
+        <cityName>Emeryville</cityName>
+        <cityName>Fairfax</cityName>
+        <cityName>Fairfield</cityName>
+        <cityName>Foster City</cityName>
+        <cityName>Fremont</cityName>
+        <cityName>Gilroy</cityName>
+        <cityName>Half Moon Bay</cityName>
+        <cityName>Hayward</cityName>
+        <cityName>Healdsburg</cityName>
+        <cityName>Hercules</cityName>
+        <cityName>Hillsborough</cityName>
+        <cityName>Lafayette</cityName>
+        <cityName>Larkspur</cityName>
+        <cityName>Livermore</cityName>
+        <cityName>Los Altos</cityName>
+        <cityName>Los Altos Hills</cityName>
+        <cityName>Los Gatos</cityName>
+        <cityName>Martinez</cityName>
+        <cityName>Menlo Park</cityName>
+        <cityName>Mill Valley</cityName>
+        <cityName>Millbrae</cityName>
+        <cityName>Milpitas</cityName>
+        <cityName>Monte Sereno</cityName>
+        <cityName>Moraga</cityName>
+        <cityName>Morgan Hill</cityName>
+        <cityName>Mountain View</cityName>
+        <cityName>Napa</cityName>
+        <cityName>Newark</cityName>
+        <cityName>Novato</cityName>
+        <cityName>Oakland</cityName>
+        <cityName>Oakley</cityName>
+        <cityName>Orinda</cityName>
+        <cityName>Pacifica</cityName>
+        <cityName>Palo Alto</cityName>
+        <cityName>Petaluma</cityName>
+        <cityName>Piedmont</cityName>
+        <cityName>Pinole</cityName>
+        <cityName>Pittsburg</cityName>
+        <cityName>Pleasant Hill</cityName>
+        <cityName>Pleasanton</cityName>
+        <cityName>Portola Valley</cityName>
+        <cityName>Redwood City</cityName>
+        <cityName>Richmond</cityName>
+        <cityName>Rio Vista</cityName>
+        <cityName>Rohnert Park</cityName>
+        <cityName>Ross</cityName>
+        <cityName>San Anselmo</cityName>
+        <cityName>San Bruno</cityName>
+        <cityName>San Carlos</cityName>
+        <cityName>San Francisco</cityName>
+        <cityName>San Jose</cityName>
+        <cityName>San Leandro</cityName>
+        <cityName>San Mateo</cityName>
+        <cityName>San Pablo</cityName>
+        <cityName>San Rafael</cityName>
+        <cityName>San Ramon</cityName>
+        <cityName>Santa Clara</cityName>
+        <cityName>Santa Rosa</cityName>
+        <cityName>Saratoga</cityName>
+        <cityName>Sausalito</cityName>
+        <cityName>Sebastopol</cityName>
+        <cityName>Sonoma</cityName>
+        <cityName>South San Francisco</cityName>
+        <cityName>Saint Helena</cityName>
+        <cityName>Suisun City</cityName>
+        <cityName>Sunnyvale</cityName>
+        <cityName>Tiburon</cityName>
+        <cityName>Union City</cityName>
+        <cityName>Vacaville</cityName>
+        <cityName>Vallejo</cityName>
+        <cityName>Walnut Creek</cityName>
+        <cityName>Windsor</cityName>
+        <cityName>Woodside</cityName>
+        <cityName>Yountville</cityName>
+    </city>
+    
+    
+
+    
+    
+</root>

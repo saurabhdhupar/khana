@@ -30,7 +30,10 @@ public class OpenMapProcessor {
 		if (response.getClientResponseStatus().getFamily() == Family.SUCCESSFUL) {
 		    String openstreetMapOutput = response.getEntity(String.class);
 		    String polygonPoints = expression.getPolygonPoints(openstreetMapOutput);
-		    openMapresponse.setGeoCode(getGeoCodePoints(polygonPoints));		    
+                    if(polygonPoints != null)
+		    openMapresponse.setGeoCode(getGeoCodePoints(polygonPoints));	
+                    else{ System.out.println("ERROR!  polygonPoints is null");    
+		}
 		} else {
 		    System.out.println("ERROR! " + response.getStatus());    
 		    System.out.println(response.getEntity(String.class));

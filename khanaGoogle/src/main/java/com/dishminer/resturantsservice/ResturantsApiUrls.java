@@ -28,6 +28,10 @@ public class ResturantsApiUrls {
     public static String FacebookAccessToken="&access_token=";
     public static String FacebookCenter="&center=";
     public static String FacebookDistance="&distance=";
+    public static String FourSquareClientID="&CLIENT_ID=";
+    public static String FourSquareClientSecret="&CLIENT_SECRET=";
+
+    
 
 
 }

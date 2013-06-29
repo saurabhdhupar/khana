@@ -15,6 +15,7 @@ public class YelpRequest implements BaseRequest{
 	private String conseumer_secret;
 	private String token;
 	private String tokenSecret;
+	private String term;
 	private RequestType type;
 	
 	public OAuthRequest getRequest() {
@@ -72,5 +73,12 @@ public class YelpRequest implements BaseRequest{
 	@Override
 	public RequestType getRequestType() {
 		return type;
+	}
+	public void setSearchTerm(String term) {
+		this.term = term;
+	}
+	
+	public String getSearchTerm() {
+		return term;
 	}
 }

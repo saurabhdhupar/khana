@@ -1,6 +1,7 @@
 package common;
 
 public class RequestParam {
+	public static final String TERM = "term";
 	public static String END_POINT = "END_POINT";
 	public static String LATITUDE = "LATITUDE";
 	public static String LONGITUDE = "LONGITUDE";

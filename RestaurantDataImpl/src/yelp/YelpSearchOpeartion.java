@@ -30,6 +30,7 @@ public class YelpSearchOpeartion implements BaseOperation{
 		request.setConsumerSecret(requestParam.get(RequestParam.CONSUMER_SECRET));
 		request.setToken(requestParam.get(RequestParam.TOKEN));
 		request.setTokenSecret(requestParam.get(RequestParam.TOKEN_SECRET));
+		request.setSearchTerm(requestParam.get(RequestParam.TERM));
 		return request;
 	}
 
@@ -42,6 +43,7 @@ public class YelpSearchOpeartion implements BaseOperation{
 		service.initService(yelpRequest.getConsumerKey(), yelpRequest.getConsumerSecret());
 		yelpRequest.getRequest().addQuerystringParameter("ll", yelpRequest.getLatitude()+","+yelpRequest.getLongitude());
 		yelpRequest.getRequest().addQuerystringParameter("category", yelpRequest.getCategory());
+		yelpRequest.getRequest().addQuerystringParameter("term", yelpRequest.getSearchTerm());
 		service.getAuthService().signRequest(accessToken, yelpRequest.getRequest());
 		Response response = yelpRequest.getRequest().send();
 		String rawData = response.getBody();

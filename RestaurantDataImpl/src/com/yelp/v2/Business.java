@@ -108,5 +108,18 @@ public class Business {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
+	@Override
+	public String toString() {
+		return "Business [id=" + id + ", name=" + name + ", imageUrl="
+				+ imageUrl + ", url=" + url + ", mobileUrl=" + mobileUrl
+				+ ", phone=" + phone + ", displayPhone=" + displayPhone
+				+ ", reviewCount=" + reviewCount + ", categories=" + categories
+				+ ", distance=" + distance + ", ratingImgUrl=" + ratingImgUrl
+				+ ", ratingImgUrlSmall=" + ratingImgUrlSmall + ", snippetText="
+				+ snippetText + ", snippetImgUrl=" + snippetImgUrl
+				+ ", location=" + location + "]";
+	}
+	
+	
 	
 }

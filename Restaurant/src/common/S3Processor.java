@@ -1,18 +1,17 @@
 package common;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 
 /*
@@ -62,4 +61,18 @@ public class S3Processor {
         }
         return restaurantObjecName;
     }
+	
+	public static RestaurantDO getObject(String key) {
+		GetObjectRequest request = new GetObjectRequest(BUCKET_NAME, key);
+		S3Object object = s3.getObject(request);
+		ObjectMapper mapper = new ObjectMapper();
+        RestaurantDO actualObj;
+    try {
+        actualObj = mapper.readValue(object.getObjectContent(),  RestaurantDO.class);
+        return actualObj;
+		} catch (Exception e){
+			
+		}
+    	return null;
+	}
 }

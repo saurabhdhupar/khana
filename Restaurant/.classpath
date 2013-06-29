@@ -5,5 +5,9 @@
 	<classpathentry kind="con" path="com.amazonaws.eclipse.sdk.AWS_JAVA_SDK"/>
 	<classpathentry kind="lib" path="C:/Users/sdhupar/Downloads/jsoup-1.7.2.jar"/>
 	<classpathentry kind="lib" path="C:/Users/sdhupar/Downloads/jackson-core-2.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/secondstring-20120620.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/guava-14.0.1.jar"/>
+	<classpathentry kind="src" path="/RestaurantDataImpl"/>
+	<classpathentry kind="src" path="/RestaurantData"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

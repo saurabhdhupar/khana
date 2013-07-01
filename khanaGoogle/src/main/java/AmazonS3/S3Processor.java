@@ -27,6 +27,8 @@ import java.util.UUID;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.ClasspathPropertiesFileCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -45,7 +47,11 @@ import com.dishminer.resturantsservice.AddressDO;
 import com.dishminer.resturantsservice.RestaurantDO;
 import java.io.FileInputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -88,6 +94,8 @@ public class S3Processor {
     
      private List<IResturantDO> restList = new ArrayList<IResturantDO>();
      private static String OBJECT_MAPPER= "object_mapper";
+     private final static  String tempBucketName = "resturant.dishminer.temp";
+      
      private  AmazonS3 s3 ; 
      private String apiname;
      private static int numberOfObjectPushed = 0;
@@ -140,7 +148,9 @@ public class S3Processor {
      public  AmazonS3 getinstance(){
      if(s3 == null){
          config.setSocketTimeout(2000);
-         s3= new AmazonS3Client(new ClasspathPropertiesFileCredentialsProvider());
+          AWSCredentials awsCredentials = new BasicAWSCredentials("AKIAJRIKBK4PS2JODPJQ", "94k7Okh00O1CpOjvxeuUkJxY7djfZz+pGSUuqxvI");
+
+         s3= new AmazonS3Client(awsCredentials);
      }
      return  s3;
      }
@@ -159,7 +169,6 @@ public class S3Processor {
         	Region usWest2 = Region.getRegion(Regions.US_WEST_2);
 		s3.setRegion(usWest2);
 
-        String bucketName = "resturant.dishminer.temp";
        // String key = "MyObjectKey";
 
         System.out.println("===========================================");
@@ -183,13 +192,13 @@ public class S3Processor {
             boolean bucketExists=false;
             for (Bucket bucket : s3.listBuckets()) {
                 System.out.println(" - " + bucket.getName());
-                if(bucket.getName().equalsIgnoreCase(bucketName))
+                if(bucket.getName().equalsIgnoreCase(tempBucketName))
                     bucketExists = true;
                 
             }
             if(!bucketExists){
-            System.out.println("Creating bucket " + bucketName + "\n");
-            s3.createBucket(bucketName);
+            System.out.println("Creating bucket " + tempBucketName + "\n");
+            s3.createBucket(tempBucketName);
             }
 
             /*
@@ -217,7 +226,7 @@ public class S3Processor {
                 
                RestaurantDO storedrest= null;
                if(key != null) {
-                    storedrest = readJSon(bucketName , key);
+                    storedrest = readJSon(tempBucketName , key);
                 }
                 
                if(storedrest != null || key == null ){
@@ -238,10 +247,10 @@ public class S3Processor {
              //   UUID randomUUID= UUID.randomUUID();
                 
             //    createSampleFile(key ,randomUUID );
-                // s3.putObject(new PutObjectRequest(bucketName, OBJECT_MAPPER,  createSampleFile(key )));
+                // s3.putObject(new PutObjectRequest(tempBucketName, OBJECT_MAPPER,  createSampleFile(key )));
             System.out.println("Trying to upload a " + key+"  object to S3 from a file\n");
            if(isZipSimilar){
-            s3.putObject(new PutObjectRequest(bucketName, key, createSampleFile(rest)));
+            s3.putObject(new PutObjectRequest(tempBucketName, key, createSampleFile(rest)));
            
             System.out.println("Uploading a " + key+"  object to S3 from a file\n");
                         System.out.println("Number of objects pushed in S3 " + numberOfObjectPushed);
@@ -279,7 +288,7 @@ public class S3Processor {
             
             
               /*System.out.println("Downloading an object");
-               S3Object object = s3.getObject(new GetObjectRequest(bucketName, OBJECT_MAPPER));
+               S3Object object = s3.getObject(new GetObjectRequest(tempBucketName, OBJECT_MAPPER));
             
             InputStream in = object.getObjectContent();
             byte[] buf = new byte[1024];
@@ -302,7 +311,7 @@ public class S3Processor {
             
             /*
 
-            //s3.putObject(new PutObjectRequest(bucketName, key, createSampleFile()));
+            //s3.putObject(new PutObjectRequest(tempBucketName, key, createSampleFile()));
 
             /*
              * Download an object - When you download an object, you get all of
@@ -332,7 +341,7 @@ public class S3Processor {
              * there is no way to undelete an object, so use caution when deleting objects.
              */
             //System.out.println("Deleting an object\n");
-            //s3.deleteObject(bucketName, key);
+            //s3.deleteObject(tempBucketName, key);
 
             /*
              * Delete a bucket - A bucket must be completely empty before it can be
@@ -340,7 +349,7 @@ public class S3Processor {
              * you try to delete them.
              */
           
-            //s3.deleteBucket(bucketName);
+           // s3.deleteBucket(tempBucketName);
         } catch (AmazonServiceException ase) {
             System.out.println("Caught an AmazonServiceException, which means your request made it "
                     + "to Amazon S3, but was rejected with an error response for some reason.");
@@ -417,7 +426,25 @@ public class S3Processor {
     }
     
     
+    public void writeLog(String log){ 
+     AmazonS3 s3 = getinstance();
+     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	   //get current date time with Date()
+	   Date date = new Date();
+	 //  System.out.println(dateFormat.format(date));
+ 
+	   //get current date time with Calendar()
+	   Calendar cal = Calendar.getInstance();
+	//   System.out.println(dateFormat.format(cal.getTime()));
+         try {
+             s3.putObject(new PutObjectRequest("dishminerlogger", log+"_"+dateFormat.format(date)+"_"+dateFormat.format(cal.getTime()), createSampleFile(log)));
+         } catch (IOException ex) {
+             Logger.getLogger(S3Processor.class.getName()).log(Level.SEVERE, null, ex);
+         }
+         
     
+    
+    }
     
     public  String[] getZipcodes(String bucketName , String key){
         
@@ -452,6 +479,25 @@ public class S3Processor {
         return zipcodes;
   
     }
+    
+    
+    
+    public void deleteObjects(){
+     AmazonS3 s3 = getinstance();
+                ListObjectsRequest request = new ListObjectsRequest();
+            request.setBucketName(tempBucketName);
+            
+         ObjectListing objectListing =  s3.listObjects(request);
+           
+            for (S3ObjectSummary objectSummary : objectListing.getObjectSummaries()) {
+               s3.deleteObject(tempBucketName, objectSummary.getKey());
+                   
+            }
+      
+    
+    
+    }
+    
     
     
     

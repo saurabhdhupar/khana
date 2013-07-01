@@ -74,7 +74,7 @@ public class ResturantServiceProccessor {
                 processor.setNumberofSameAPiCalls(numberofSameAPiCalls);
             
             }
-            
+              
                  
             
 
@@ -82,7 +82,7 @@ public class ResturantServiceProccessor {
             for(String city : cities){
             String currentcity=city.toLowerCase()+","+"ca";
               System.out.println("Current City :- " + currentcity);
-           
+           processor.writeLog("Current City :- " + currentcity);
            
                
             String [] zipcodes = processor.getZipcodes("zipcodesvc.dishminer.us", currentcity);
@@ -91,12 +91,16 @@ public class ResturantServiceProccessor {
             for(String zipcode : zipcodes){
                 //TODO: remove this line
                 System.out.println("Current ZipCode  :- " + zipcode);
-                
+                processor.writeLog("Current ZipCode  :- " + zipcode);
+           
                 processor.setZipcode(zipcode);
                zipcode= zipcode.replaceAll("\"","");
                 if(zipcode.isEmpty()) break;
                 Set<GeoCodeDO> codes = getCodes(zipcode,currentcity, "CA", "us");
-                if(codes == null || codes.isEmpty()) continue;
+                    
+                if(codes == null || codes.isEmpty()) {processor.writeLog("No Codes for" + zipcode);
+           
+        continue;}
                  System.out.println("Number of GeoCodes for ZipCode:- "+zipcode+" are  :- " + codes.size());
               
                  Iterator<GeoCodeDO> itr_gecode = codes.iterator();

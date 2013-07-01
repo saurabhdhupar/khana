@@ -9,7 +9,7 @@ and open the template in the editor.
     
     
     <city>
-        <cityName>Alameda</cityName>
+        <!--cityName>Alameda</cityName>
         <cityName>Albany</cityName>
          <cityName>American Canyon</cityName>
         <cityName>Antioch</cityName>
@@ -21,7 +21,11 @@ and open the template in the editor.
         <cityName>Brentwood</cityName>
         <cityName>Brisbane</cityName>
         <cityName>Burlingame</cityName>
-        <cityName>Calistoga</cityName>
+        <cityName>Calistoga</cityName!-->
+         <cityName>Mountain View</cityName>
+           <cityName>San Jose</cityName>
+      <cityName>San Francisco</cityName>
+     
         <cityName>Campbell</cityName>
         <cityName>Clayton</cityName>
         <cityName>Cloverdale</cityName>
@@ -61,7 +65,6 @@ and open the template in the editor.
         <cityName>Monte Sereno</cityName>
         <cityName>Moraga</cityName>
         <cityName>Morgan Hill</cityName>
-        <cityName>Mountain View</cityName>
         <cityName>Napa</cityName>
         <cityName>Newark</cityName>
         <cityName>Novato</cityName>
@@ -85,8 +88,6 @@ and open the template in the editor.
         <cityName>San Anselmo</cityName>
         <cityName>San Bruno</cityName>
         <cityName>San Carlos</cityName>
-        <cityName>San Francisco</cityName>
-        <cityName>San Jose</cityName>
         <cityName>San Leandro</cityName>
         <cityName>San Mateo</cityName>
         <cityName>San Pablo</cityName>

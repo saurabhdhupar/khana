@@ -75,7 +75,7 @@ public class ResturantServiceProccessor {
             
             }
             
-            
+                 
             
 
             //S3Processor.readJSon();
@@ -106,7 +106,7 @@ public class ResturantServiceProccessor {
                  int numberOfRecordsToSkip=0;
                  int codesSize=0;
                  while(itr_gecode.hasNext() ) {
-                      if(skipRecords && numberOfRecordsToSkip < 30 ) {
+                      if(skipRecords && numberOfRecordsToSkip < 100 ) {
                          codesSize++;
                          numberOfRecordsToSkip++;
                         
@@ -134,7 +134,7 @@ public class ResturantServiceProccessor {
                               numberOfSameCalls++;
                                System.out.println("Number of same calls "  + numberOfSameCalls);
                                   
-                              if(numberOfSameCalls > 6) {
+                              if(numberOfSameCalls > 10) {
                                    System.out.println("Breaking Loop For ZipCode "  + zipcode);
                                      System.out.println("Breaking Loop For GeoCode "  + code.toString());
               

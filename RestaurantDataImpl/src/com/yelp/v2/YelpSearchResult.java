@@ -2,6 +2,9 @@ package com.yelp.v2;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class YelpSearchResult {
 	private Region region;
 	private int total;

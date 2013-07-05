@@ -1,9 +1,13 @@
 package yelp;
 
+import java.io.IOException;
 import java.util.Map;
 
 import operation.BaseOperation;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
@@ -12,8 +16,8 @@ import org.scribe.model.Verb;
 import request.BaseRequest;
 import response.BaseResponse;
 
-import com.google.gson.Gson;
 import com.yelp.v2.YelpSearchResult;
+
 import common.RequestParam;
 
 public class YelpSearchOpeartion implements BaseOperation{
@@ -35,7 +39,7 @@ public class YelpSearchOpeartion implements BaseOperation{
 	}
 
 	@Override
-	public BaseResponse process(BaseRequest request) {
+	public BaseResponse process(BaseRequest request, boolean out) {
 		YelpResponse yelpResponse = new YelpResponse();
 		YelpRequest	yelpRequest = (YelpRequest)request;
 		Token accessToken = new Token(yelpRequest.getToken(), yelpRequest.getTokenSecret());
@@ -47,8 +51,23 @@ public class YelpSearchOpeartion implements BaseOperation{
 		service.getAuthService().signRequest(accessToken, yelpRequest.getRequest());
 		Response response = yelpRequest.getRequest().send();
 		String rawData = response.getBody();
-		System.out.println(rawData);
-	    YelpSearchResult places = new Gson().fromJson(rawData, YelpSearchResult.class);
+		if(out) {
+			System.out.println(rawData);
+		}
+		
+		YelpSearchResult places = null;
+		try {
+			places = new ObjectMapper().readValue(rawData, YelpSearchResult.class);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    yelpResponse.setResults(places);
 		return yelpResponse;
 	}

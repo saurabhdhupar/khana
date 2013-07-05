@@ -41,8 +41,13 @@ public class DistanceFinder {
 	    return (rad * 180 / Math.PI);
 	}
 	
+	public static String normalizePhone(String phoneNumber) {
+		return phoneNumber.replace("+1", "").replaceAll("-", "").trim();
+	}
+	
 	public static void main(String args[]) {
 		System.out.println(DistanceFinder.distance(37.357458, -122.01820405, 37.3576490, -122.0192760, 'K'));
+		System.out.println(normalizePhone("+1 510-524-2220"));
 	}
 
 }

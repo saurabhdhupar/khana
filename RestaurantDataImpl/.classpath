@@ -10,5 +10,8 @@
 	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/httpclient-4.0.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/sdhupar/Desktop/DishMiner/httpcore-4.0.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/Downloads/jackson-core-2.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/aws-java-sdk/1.4.6/third-party/jackson-mapper-1.8/jackson-mapper-asl-1.8.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/sdhupar/aws-java-sdk/1.4.6/third-party/jackson-core-1.8/jackson-core-asl-1.8.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

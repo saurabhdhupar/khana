@@ -34,10 +34,10 @@ public class YelpServiceProcessor implements BaseServiceProcessor{
 	}
 
 	@Override
-	public BaseResponse exceute(Map<String, String> param) {
+	public BaseResponse exceute(Map<String, String> param, boolean out) { 
 		YelpSearchOpeartion operation = new YelpSearchOpeartion();
 		BaseRequest request = operation.prepareRequest(param);
-		return operation.process(request);
+		return operation.process(request, out);
 	}
 
 }

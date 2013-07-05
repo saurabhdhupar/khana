@@ -7,5 +7,5 @@ import response.BaseResponse;
 
 public interface BaseOperation {
 	public BaseRequest prepareRequest(Map<String,String> requestParam);
-	public BaseResponse process(BaseRequest request);	
+	public BaseResponse process(BaseRequest request, boolean out);	
 }
